@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Exercício de Biometria - Aula 11 by ThaGodoy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Exercício de Biometria - Aula 11</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/ThaGodoy/exercicioaula11" class="btn">View on GitHub</a>
+      <a href="https://github.com/ThaGodoy/exercicioaula11/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/ThaGodoy/exercicioaula11/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><strong>Alunos: Gabriel Costa e Thaís Godoy</strong></p>
+
+<p><strong>Exercício aula 11</strong></p>
+
+<p><strong>Enunciado da Questão</strong></p>
+
+<p>2) Considere novamente o conjunto de dados de Mimulus e o caráter fenotípico que você escolheu em exercícios anteriores.</p>
+
+<p>•Faça agora uma análise usando o MIM para localizar QTLs e estudar eventuais interações epistáticas entre eles, usando o R/qtl.</p>
+
+<p>•Compare os resultados com o que foi obtido com o CIM, ressaltando as possíveis vantagens do MIM.</p>
+
+<p>•Apresente os resultados em gráficos e tabelas com os QTLs mapeados, incluindo todas as informações que julgar importantes (LOD, efeitos, R2, etc).</p>
+
+<p>•Explique como realizou a análise em detalhes, com um texto que poderia ser usado em Material e Métodos numa eventual publicação (texto em inglês).</p>
+
+<p>•Apresente os resultados em um arquivo html.</p>
+
+<p>•O exercício pode ser feito pelo mesmo grupo que já trabalhou nos dados de Mimulus.</p>
+
+<p><strong>RESULTADOS</strong></p>
+
+<p>Os resultados serão apresentados seguindo a ordem dos tópicos solicitados no enunciado da questão.
+1)  Faça agora uma análise usando o MIM para localizar QTLs e estudar eventuais interações epistáticas entre eles, usando o R/qtl. Comandos utilizados nesta etapa:</p>
+
+<div class="highlight highlight-javascript"><pre>library(qtl)
+arquivo<span class="pl-k">&lt;-</span>read.cross(<span class="pl-s"><span class="pl-pds">"</span>mm<span class="pl-pds">"</span></span>,dir<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>C:<span class="pl-cce">\\</span>Users<span class="pl-cce">\\</span>Usuario<span class="pl-cce">\\</span>Desktop<span class="pl-cce">\\</span>BIOMETRIA<span class="pl-pds">"</span></span>,file<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>m_feb06.raw<span class="pl-pds">"</span></span>,mapfile<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>mapa_onemap_total.map<span class="pl-pds">"</span></span>)
+arquivo<span class="pl-k">&lt;-</span>calc.genoprob(arquivo, step<span class="pl-k">=</span><span class="pl-c1">1</span>, error.prob<span class="pl-k">=</span><span class="pl-c1">0.05</span>)
+arquivo<span class="pl-k">&lt;-</span> sim.geno(arquivo, step<span class="pl-k">=</span><span class="pl-c1">2</span>, n.draws<span class="pl-k">=</span><span class="pl-c1">14</span>, err<span class="pl-k">=</span><span class="pl-c1">0.001</span>) #imputação
+out.em<span class="pl-k">&lt;-</span>scanone(arquivo, method<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>em<span class="pl-pds">"</span></span>)
+summary(out.em)
+operm <span class="pl-k">&lt;-</span> scanone(arquivo, method<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>hk<span class="pl-pds">"</span></span>, n.perm<span class="pl-k">=</span><span class="pl-c1">1000</span>, verbose<span class="pl-k">=</span><span class="pl-c1">FALSE</span>)
+summary(operm)
+plot(operm, col<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>white<span class="pl-pds">"</span></span>)
+abline(v<span class="pl-k">=</span><span class="pl-c1">3.73</span>, col<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>red<span class="pl-pds">"</span></span>, lty<span class="pl-k">=</span><span class="pl-c1">3</span>, lwd<span class="pl-k">=</span><span class="pl-c1">3</span>)
+
+plot(out.em, chr<span class="pl-k">=</span>c(<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>,<span class="pl-c1">10</span>,<span class="pl-c1">11</span>,<span class="pl-c1">12</span>,<span class="pl-c1">13</span>,<span class="pl-c1">14</span>), ylab<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>LOD score<span class="pl-pds">"</span></span>, xlab<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Chromosome<span class="pl-pds">"</span></span>,
+     ylim<span class="pl-k">=</span>c(<span class="pl-c1">0</span>,<span class="pl-c1">5</span>))
+add.threshold(out.em, chr<span class="pl-k">=</span>c(<span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span>,<span class="pl-c1">4</span>,<span class="pl-c1">5</span>,<span class="pl-c1">6</span>,<span class="pl-c1">7</span>,<span class="pl-c1">8</span>,<span class="pl-c1">9</span>,<span class="pl-c1">10</span>,<span class="pl-c1">11</span>,<span class="pl-c1">12</span>,<span class="pl-c1">13</span>,<span class="pl-c1">14</span>), perms<span class="pl-k">=</span>operm, alpha<span class="pl-k">=</span><span class="pl-c1">0.05</span>, col<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>red<span class="pl-pds">"</span></span>, lty<span class="pl-k">=</span><span class="pl-c1">3</span>)
+summary (out.em)
+names(arquivo)
+head(arquivo$pheno)
+arquivo<span class="pl-k">&lt;-</span> sim.geno(arquivo, step<span class="pl-k">=</span><span class="pl-c1">2</span>, n.draws<span class="pl-k">=</span><span class="pl-c1">12</span>, err<span class="pl-k">=</span><span class="pl-c1">0.001</span>)
+qtl<span class="pl-k">&lt;-</span>makeqtl(arquivo, chr<span class="pl-k">=</span>c(<span class="pl-c1">2</span>,<span class="pl-c1">4</span>,<span class="pl-c1">6</span>,<span class="pl-c1">11</span>,<span class="pl-c1">12</span>),pos<span class="pl-k">=</span>c(<span class="pl-c1">100.0</span>,<span class="pl-c1">148.6</span>,<span class="pl-c1">277.3</span>,<span class="pl-c1">46.0</span>,<span class="pl-c1">9.0</span>)) 
+qtl
+plot(qtl)
+rqtl <span class="pl-k">&lt;-</span> refineqtl(arquivo, qtl<span class="pl-k">=</span>qtl, formula<span class="pl-k">=</span>y<span class="pl-k">~</span><span class="pl-c1">Q1</span><span class="pl-k">+</span><span class="pl-c1">Q2</span><span class="pl-k">+</span><span class="pl-c1">Q3</span><span class="pl-k">+</span><span class="pl-c1">Q4</span><span class="pl-k">+</span><span class="pl-c1">Q5</span>,verbose<span class="pl-k">=</span><span class="pl-c1">FALSE</span>)
+rqtl
+plotLodProfile(rqtl, ylab<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Profile LOD score<span class="pl-pds">"</span></span>)
+out.fq <span class="pl-k">&lt;-</span> fitqtl(arquivo, qtl<span class="pl-k">=</span>rqtl, formula<span class="pl-k">=</span>y<span class="pl-k">~</span><span class="pl-c1">Q1</span><span class="pl-k">+</span><span class="pl-c1">Q2</span><span class="pl-k">+</span><span class="pl-c1">Q3</span><span class="pl-k">+</span><span class="pl-c1">Q4</span><span class="pl-k">+</span><span class="pl-c1">Q5</span>)
+summary(out.fq)
+##estudo de interação entre os QTLs (epistasia) ##
+addint(arquivo, qtl<span class="pl-k">=</span>rqtl, formula<span class="pl-k">=</span>y<span class="pl-k">~</span><span class="pl-c1">Q1</span><span class="pl-k">+</span><span class="pl-c1">Q2</span><span class="pl-k">+</span><span class="pl-c1">Q3</span><span class="pl-k">+</span><span class="pl-c1">Q4</span><span class="pl-k">+</span><span class="pl-c1">Q5</span>, pvalues<span class="pl-k">=</span><span class="pl-c1">FALSE</span>)
+summary (addint)
+out.aq <span class="pl-k">&lt;-</span> addqtl(arquivo, qtl<span class="pl-k">=</span>rqtl, formula<span class="pl-k">=</span>y<span class="pl-k">~</span><span class="pl-c1">Q1</span><span class="pl-k">+</span><span class="pl-c1">Q2</span><span class="pl-k">+</span><span class="pl-c1">Q3</span><span class="pl-k">+</span><span class="pl-c1">Q1</span><span class="pl-k">*</span><span class="pl-c1">Q3</span>)
+plot(out.aq, ylab<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>LOD score<span class="pl-pds">"</span></span>)
+abline(h<span class="pl-k">=</span><span class="pl-c1">3.73</span>, col<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>red<span class="pl-pds">"</span></span>)</pre></div>
+
+<p>**observação: o valor de LOD utilizado (3.73), foi o valor obtido com alfa 5% no exercício anterior.</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366449/6ecbbbf6-1b6b-11e5-8229-2234edf0d5ab.png" alt="Imagem1"></p>
+
+<p>Gráfico obtido após análise de permutação realizada pelo método proposto por Haley-knott para estimar o limiar do LOD score (3.73) com alfa de 5%.</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366482/aa51b43c-1b6b-11e5-88cf-d1dce404e6ca.png" alt="imagem2"></p>
+
+<p>Gráfico com o LOD score de cada cromossomo/grupo de ligação, pela análise de MIM. O valor do trashold do LOD score é 3.73.</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366503/d565d4dc-1b6b-11e5-938b-4d37f47aee6b.png" alt="imagem3"></p>
+
+<p>Após análise pelo método MIM, podemos observar dois QTLs com valor de LOD superior ao limiar (3,73) sugerindo dois QTLs associados com essa característica. Os QTLs foram identificados nos cromossomos 4 e 12.
+Para checarmos possíveis interações (epistasia), selecionamos os QTLs que apresentaram LOD score superior a 2,5 (ver tabela abaixo).</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366526/00a67bba-1b6c-11e5-86d3-b17ad2dc122a.png" alt="imagem4"></p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366539/1bbe8ec4-1b6c-11e5-8827-5a883a76ae2a.png" alt="iamgem4"></p>
+
+<p>Gráfico gerado com todos os cromossomos (grupos de ligação) e os QTLs mapeados com LOD score acima de 2,5, como citado anteriormente. Um total de 5 QTLs foram inseridos. A nova posição dos 5 QTLs após refinar, estão listadas abaixo:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366560/4643d6ae-1b6c-11e5-9020-0a058422239c.png" alt="Imagem5"></p>
+
+<p>Um gráfico com o perfil do LOD score foi plotado evidenciando o LOD score dos 5 QTLs inseridos na análise. O gráfico pode ser observado abaixo:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366577/6c822596-1b6c-11e5-9b9a-0c3d9f5356c8.png" alt="Imagem 5"></p>
+
+<p>O modelo com todos os 5 QTLs selecionados foi considerado para checar se os 5 são significativos ou não. Após análise de variância (ANOVA), todos os 5 QTLs foram significativos (ver resultados abaixo) e serão testadas as suas interações para checar possível epistasia. </p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366591/94436c48-1b6c-11e5-8ac8-6ded624da6a7.png" alt="imagem 6"></p>
+
+<p>Após testar todas as interações possíveis, foram obtidos os seguintes resultados (ver figura abaixo):</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366626/f3b9e094-1b6c-11e5-911c-3e6c255d48c5.png" alt="imagem7"></p>
+
+<p>Considerando os valores de LOD score obtidos após análise de interações, é possível inferir que existe uma interação entre o QTL 1 e o 3. Inserindo o modelo com a interação, obtivemos um gráfico com o valor do LOD score por cromossomo (grupo de ligação). Ver gráfico abaixo.</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366678/51f040ea-1b6d-11e5-8251-2e3fcea39bc5.png" alt="Imagem 8"></p>
+
+<p>Considerando o limiar do LOD score de 3,73 (linha vermelha no gráfico), podemos observar um QTL no grupo de ligação 12 associado com a característica. O modelo considerando a interação entre o QTL 1 e 3 (nos cromossomos/grupos de ligação 2 e 6 respectivamente) resultou em um maior LOD score para o QTL mapeado no cromossomo/grupo de ligação 12.</p>
+
+<p>2)  Compare os resultados com o que foi obtido com o CIM, ressaltando as possíveis vantagens do MIM.</p>
+
+<p>Comparando os resultados obtidos no mapeamento por intervalo composto (CIM) e no mapeamento de múltiplos intervalos (MIM), alguns aspectos interessantes podem ser observados:</p>
+
+<p>a)  Considerando o gráfico do LOD Score com os valores de covariaveis e covariável aditiva do CIM com o gráfico do LOD Score do MIM (sem considerar as interações no modelo), no CIM o QTL do cromossomo 4 não apresentou LOD score superior ao limiar estabelecido entretanto, no MIM, o QTL no cromossomo 4, apresentou LOD score superior ao limiar. Neste caso, o MIM pode ser mais acurado e/ou refinado do que o CIM. 
+Os dois gráficos comentados anteriormente estão apresentados a seguir:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366712/98054c88-1b6d-11e5-9750-fbb51cc59a04.png" alt="Imagem 9"></p>
+
+<p>b)  Considerando o gráfico de LOD score (que inclui as interações) no CIM e o gráfico de LOD score (que inclui as interações/epistasia) no MIM, QTLs em cromossomos diferentes foram apontados com LOD score superior ao limiar estabelecido. No CIM, um QTL no cromossomo 8 foi apontado como associado à característica e no MIM, um QTL no cromossomo 12 foi apontado como associado à característica.</p>
+
+<p>Os dois gráficos comentados estão apresentados a seguir:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/12297507/8366738/e82a3390-1b6d-11e5-88f0-f4a8bd0fb29f.png" alt="Imagem10"></p>
+
+<p>Comentários da comparação:
+De modo geral, o MIM gera resultados mais refinados se considerarmos o modelo sem as interações entre os QTLs. No caso em que uma interação é significativa e devem ser incluída no modelo, os resultados apresentados pelos dois métodos podem diferir. </p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/ThaGodoy/exercicioaula11">Exercício de Biometria - Aula 11</a> is maintained by <a href="https://github.com/ThaGodoy">ThaGodoy</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
